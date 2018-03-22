@@ -6,8 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
-
 var app = express();
+const neo4j = require('neo4j-driver').v1;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,15 +21,47 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//var driver = neo4j.driver(nconf.get('blot://localhost'), neo4j.auth.basic(nconf.get('neo4j'), nconf.get('12345')));
+ const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('user', 'password'));
+const session = driver.session();
+
+
 app.use('/', index);
 app.use('/users', users);
 
+
+app.get('/k',(req,res)=>{
+
+  
+const personName = 'Alice';
+const resultPromise = session.run(
+  'CREATE (a:Person {name: $name}) RETURN a',
+  {name: personName}
+);
+
+resultPromise.then(result => {
+  session.close();
+
+  const singleRecord = result.records[0];
+  const node = singleRecord.get(0);
+
+  console.log(node.properties.name);
+
+  // on application exit:
+  driver.close();
+
+  res.send('wwww')
+
+});
+
+})
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
