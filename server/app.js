@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //var driver = neo4j.driver(nconf.get('blot://localhost'), neo4j.auth.basic(nconf.get('neo4j'), nconf.get('12345')));
- const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('user', 'password'));
+ const driver = neo4j.driver('bolt://localhost:7687', neo4j.auth.basic('user', 'password'));
 const session = driver.session();
 
 
@@ -33,11 +33,8 @@ app.use('/users', users);
 app.get('/k',(req,res)=>{
 
   
-const personName = 'Alice';
-const resultPromise = session.run(
-  'CREATE (a:Person {name: $name}) RETURN a',
-  {name: personName}
-);
+ const resultPromise = session.run(
+  'MATCH (ee:Person) WHERE ee.klout>1 RETURN ee');
 
 resultPromise.then(result => {
   session.close();
