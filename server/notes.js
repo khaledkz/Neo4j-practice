@@ -16,3 +16,5 @@ CREATE(LiverPool:team {name:'Liver Pool', date:2011,players:15,country:'Leb'})
 
 CREATE(MoSalah:player {name:'Mohammed Salah', age:26}) 
 
+//create relation between player and team
+CREATE(MoSalah)-[:playWith {role:'golar'}]->(LiverPool);
