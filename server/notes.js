@@ -9,7 +9,7 @@ CREATE(MoSalah: player { name: 'Mohammed Salah', age: 26 })
 //create relation between player and team
 CREATE(MoSalah) - [: playWith { role: 'golar' }] -> (LiverPool);
 
-//create familey relations
+//create family relations
 CREATE(kharaz:family { name:'kharaz', location: 'Leb' })
 CREATE(moussa:family { name:'moussa', location: 'qatar' })
 CREATE(Sharay:family { name: 'Sharay', location: 'Leb' })
